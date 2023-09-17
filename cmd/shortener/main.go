@@ -1,3 +1,22 @@
 package main
 
-func main() {}
+import (
+	"net/http"
+)
+
+func main() {
+	if err := run(); err != nil {
+		panic(err)
+	}
+}
+
+func run() error {
+	return http.ListenAndServe(`:8080`, http.HandlerFunc(webhook))
+}
+
+func webhook(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+}
